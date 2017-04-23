@@ -9,18 +9,23 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class IntroActivity extends AppCompatActivity {
     ImageView f_btn1, f_btn2, f_btn3, f_btn4, f_control;   // 프레임 메뉴 버튼 (아래)
     ImageView f_exit1, f_exit2, f_exit3, f_exit4, f_main_exit;  // 각 프레임 종료 버튼
+    ImageView f2_upmoo; // 업무 메뉴의 메인 이미지
     LinearLayout frame1, frame2, frame3, frame4, frame_control, frame_main;
-    MediaPlayer mp, mp2, mp3;    // 배경음, 효과음
+    MediaPlayer mp, mp2, mp3, mp4, mp5, mp6;    // 배경음, 효과음
     private final long FINISH_INTERVAL_TIME = 2000;
     private long backPressedTime = 0;
-    CheckBox ch1, ch2;
+    CheckBox ch1, ch2;  // 배경음, 효과음 체크박스
+    TextView title_upmoo, title_gold;   // 타이틀바의 업무능력, 현재골드 텍스트뷰
 
     boolean mp_effect= true;
+
+    int upmooLevel = 10;
 
     @Override
     public void onBackPressed() {       // 뒤로가기 두번 누르면 종료, 토스트로 종료하겠냐고 물어봄.
@@ -62,13 +67,31 @@ public class IntroActivity extends AppCompatActivity {
         f_exit3 = (ImageView)findViewById(R.id.img_exit3);
         f_exit4 = (ImageView)findViewById(R.id.img_exit4);  // 각 프레임 종료버튼
         f_main_exit =(ImageView)findViewById(R.id.f_main_exit);
+        f2_upmoo = (ImageView)findViewById(R.id.f2_upmoo);
 
         ch1 = (CheckBox)findViewById(R.id.ch_back);
         ch2=(CheckBox)findViewById(R.id.ch_effect);
 
+        title_upmoo = (TextView)findViewById(R.id.title_upmoo);
+        title_gold = (TextView)findViewById(R.id.title_gold);
+
+
+        f2_upmoo.setOnClickListener(new View.OnClickListener() {        // 업무 이미지를 눌렀을때 , 업무 능력이 올라감
+            @Override
+            public void onClick(View v) {
+                if(mp_effect == true){
+                    mp4.start();
+                }
+                String result = title_upmoo.getText().toString();
+                int result2 = Integer.parseInt(result) + upmooLevel;
+                title_upmoo.setText(Integer.toString(result2));
+            }
+        });
+
+
         ch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {    // 배경음 체크박스 온/오프
                 if(isChecked){
                     mp.start();
                 }else{
@@ -79,7 +102,7 @@ public class IntroActivity extends AppCompatActivity {
 
         ch2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {        // 효과음 체크박스 온/오프
                 if(isChecked){
                     mp_effect = true;
                 }else{
@@ -201,14 +224,9 @@ public class IntroActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        mp = MediaPlayer.create(this, R.raw.bit);       // 배경음
-        mp.setLooping(true);
-        mp.start();
-        */
 
         mp = MediaPlayer.create(this,R.raw.mainthema2);
-        mp.setLooping(false);
+        mp.setLooping(true);    // 반복할지 안할지
         mp.start();
 
         mp2 = MediaPlayer.create(this, R.raw.click2);   // 프레임메뉴버튼 효과음
@@ -216,6 +234,9 @@ public class IntroActivity extends AppCompatActivity {
 
         mp3 = MediaPlayer.create(this, R.raw.click1);   // 종료버튼 효과음
         mp3.setLooping(false);
+
+        mp4 = MediaPlayer.create(this, R.raw.upmoo_click);
+        mp4.setLooping(false);
 
 
 
